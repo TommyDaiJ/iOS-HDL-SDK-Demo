@@ -159,7 +159,6 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
         self.performSegue(withIdentifier: "ShowApplianceView", sender: appliancesInfo)
     }
     
-    
     //在这个方法中给新页面传递参数
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowApplianceView"{
