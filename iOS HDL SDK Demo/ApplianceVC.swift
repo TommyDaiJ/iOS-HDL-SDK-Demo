@@ -9,6 +9,9 @@
 import UIKit
 import HDLSDK
 
+
+
+/// 显示设备各回路备注
 class ApplianceVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var tableView:UITableView?

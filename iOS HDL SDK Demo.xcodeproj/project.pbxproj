@@ -125,11 +125,11 @@
 				657C90752092FC6700454F1C /* AppDelegate.swift */,
 				657C90772092FC6700454F1C /* ViewController.swift */,
 				653260A7209308A000BCA1F6 /* ApplianceVC.swift */,
+				653260A9209308C400BCA1F6 /* CtrlVC.swift */,
 				657C90792092FC6700454F1C /* Main.storyboard */,
 				657C907C2092FC6800454F1C /* Assets.xcassets */,
 				657C907E2092FC6800454F1C /* LaunchScreen.storyboard */,
 				657C90812092FC6800454F1C /* Info.plist */,
-				653260A9209308C400BCA1F6 /* CtrlVC.swift */,
 			);
 			path = "iOS HDL SDK Demo";
 			sourceTree = "<group>";
@@ -467,6 +467,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "iOS HDL SDK Demo/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -489,6 +490,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "iOS HDL SDK Demo/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

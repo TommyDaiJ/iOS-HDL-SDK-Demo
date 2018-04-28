@@ -9,6 +9,8 @@
 import UIKit
 import HDLSDK
 
+
+/// 演示控制某一回路
 class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDelegate,DeviceStateDelegate,SceneCtrlDelegate {
     
     var info:AppliancesInfo?
@@ -41,17 +43,17 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
     
     private func initView(){
         // 此处判断什么设备，并将其他设备控件隐藏
-        // 1：调光回路（灯） 2：开关回路（继电器）（灯） 3：混合调光类 （灯） 4：混合开关类（继电器）（灯）
-        // 5：开合帘电机（窗帘）6：卷帘电机（窗帘） 7：窗帘模块 （窗帘）
-        // 8：HVAC 模块(空调)   9：通用空调面板(空调)
-        // 10：背景音乐模块（音乐） 11：第三方背景音乐模块（音乐）
-        // 12：逻辑模块（场景） 13：全局逻辑模块（场景）
+        // 101：调光回路（灯） 102：开关回路（继电器）（灯） 103：混合调光类 （灯） 104：混合开关类（继电器）（灯）
+        // 201：开合帘电机（窗帘）202：卷帘电机（窗帘） 203：窗帘模块 （窗帘）
+        // 301：HVAC 模块(空调)   302：通用空调面板(空调)
+        // 401：背景音乐模块（音乐） 402：第三方背景音乐模块（音乐）
+        // 501：逻辑模块（场景） 502：全局逻辑模块（场景）
         
-        //1、2、3、4 为灯 TYPE_LIGHT_DIMMER、TYPE_LIGHT_RELAY、TYPE_LIGHT_MIX_DIMMER、TYPE_LIGHT_MIX_RELAY
-        //5、6、7 为窗帘 TYPE_CURTAIN_GLYSTRO、TYPE_CURTAIN_ROLLER、TYPE_CURTAIN_MODULE
-        //8、9 为空调 TYPE_AC_HVAC、TYPE_AC_PANEL
-        //10、11 为音乐 TYPE_MUSIC_MODULE、TYPE_MUSIC_THIRD_PARTY_MODULE
-        //12、13 为场景 TYPE_LOGIC_MODULE、TYPE_GLOBAL_LOGIC_MODULE
+        //101，102，103，104 为灯 TYPE_LIGHT_DIMMER、TYPE_LIGHT_RELAY、TYPE_LIGHT_MIX_DIMMER、TYPE_LIGHT_MIX_RELAY
+        //201，202，203 为窗帘 TYPE_CURTAIN_GLYSTRO、TYPE_CURTAIN_ROLLER、TYPE_CURTAIN_MODULE
+        //301，302，303 为空调 TYPE_AC_HVAC、TYPE_AC_PANEL
+        //401，402 为音乐 TYPE_MUSIC_MODULE、TYPE_MUSIC_THIRD_PARTY_MODULE
+        //501，502 为场景 TYPE_LOGIC_MODULE、TYPE_GLOBAL_LOGIC_MODULE
         switch info!.deviceType! {
         case HDLApConfig.TYPE_LIGHT_DIMMER
         ,HDLApConfig.TYPE_LIGHT_RELAY
@@ -133,10 +135,13 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
     
     private func registerForHDL(){
         //        Demo为了演示直接拿此参数，在一个界面注册一种设备Delegate。若在同一界面需要控制多种设备则可以如下连续注册
-        //        HDLCommand.shareInstance.registerDelegate(type: HDLApConfig.TYPE_LIGHT, delegate: self)
-        //        HDLCommand.shareInstance.registerDelegate(type: HDLApConfig.TYPE_CURTAIN, delegate: self)
-        //        HDLCommand.shareInstance.registerDelegate(type: HDLApConfig.TYPE_AC, delegate: self)
-        //        HDLCommand.shareInstance.registerDelegate(type: HDLApConfig.TYPE_LOGIC, delegate: self)
+        //  HDLCommand.shareInstance.registerDelegate(delegate: self,type: HDLApConfig.TYPE_LIGHT)
+        
+        //  HDLCommand.shareInstance.registerDelegate(delegate: self,type: HDLApConfig.TYPE_CURTAIN)
+        
+        //  HDLCommand.shareInstance.registerDelegate(delegate: self,type: HDLApConfig.TYPE_AC)
+        
+        //  HDLCommand.shareInstance.registerDelegate(delegate: self,type: HDLApConfig.TYPE_LOGIC)
         
         HDLCommand.shareInstance.registerDelegate(delegate: self, type: self.info!.bigType!)
         
