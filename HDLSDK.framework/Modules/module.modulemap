@@ -1,0 +1,11 @@
+framework module HDLSDK {
+  umbrella header "HDLSDK.h"
+
+  export *
+  module * { export * }
+}
+
+module HDLSDK.Swift {
+    header "HDLSDK-Swift.h"
+    requires objc
+}

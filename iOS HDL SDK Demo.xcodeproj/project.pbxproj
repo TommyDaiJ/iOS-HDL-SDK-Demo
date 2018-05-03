@@ -16,6 +16,9 @@
 		657C90802092FC6800454F1C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 657C907E2092FC6800454F1C /* LaunchScreen.storyboard */; };
 		657C908B2092FC6800454F1C /* iOS_HDL_SDK_DemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657C908A2092FC6800454F1C /* iOS_HDL_SDK_DemoTests.swift */; };
 		657C90962092FC6900454F1C /* iOS_HDL_SDK_DemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657C90952092FC6900454F1C /* iOS_HDL_SDK_DemoUITests.swift */; };
+		65EEC3A5209B520D0082822C /* HDLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65EEC3A4209B520D0082822C /* HDLSDK.framework */; };
+		65EEC3A6209B52170082822C /* HDLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65EEC3A4209B520D0082822C /* HDLSDK.framework */; };
+		65EEC3A7209B52170082822C /* HDLSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 65EEC3A4209B520D0082822C /* HDLSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +45,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				65EEC3A7209B52170082822C /* HDLSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -64,6 +68,7 @@
 		657C90912092FC6900454F1C /* iOS HDL SDK DemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "iOS HDL SDK DemoUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		657C90952092FC6900454F1C /* iOS_HDL_SDK_DemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOS_HDL_SDK_DemoUITests.swift; sourceTree = "<group>"; };
 		657C90972092FC6900454F1C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		65EEC3A4209B520D0082822C /* HDLSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HDLSDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +76,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65EEC3A6209B52170082822C /* HDLSDK.framework in Frameworks */,
+				65EEC3A5209B520D0082822C /* HDLSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,6 +101,7 @@
 		657C90692092FC6700454F1C = {
 			isa = PBXGroup;
 			children = (
+				65EEC3A4209B520D0082822C /* HDLSDK.framework */,
 				657C90742092FC6700454F1C /* iOS HDL SDK Demo */,
 				657C90892092FC6800454F1C /* iOS HDL SDK DemoTests */,
 				657C90942092FC6900454F1C /* iOS HDL SDK DemoUITests */,
