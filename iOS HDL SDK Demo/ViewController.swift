@@ -11,7 +11,6 @@ import HDLSDK
 
 class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSource,DevicesInfoDelegate,ScenesInfoDelegate{
     
-    
     var activityIndicator:UIActivityIndicatorView!
     var tableView:UITableView?
     var devicesRemark:[String] = [] //设备备注。（例如：一个继电器灯光设备会有N个回路）
