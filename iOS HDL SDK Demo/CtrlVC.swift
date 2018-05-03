@@ -43,17 +43,17 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
     
     private func initView(){
         // 此处判断什么设备，并将其他设备控件隐藏
-        // 101：调光回路（灯） 102：开关回路（继电器）（灯） 103：混合调光类 （灯） 104：混合开关类（继电器）（灯）
-        // 201：开合帘电机（窗帘）202：卷帘电机（窗帘） 203：窗帘模块 （窗帘）
-        // 301：HVAC 模块(空调)   302：通用空调面板(空调)
-        // 401：背景音乐模块（音乐） 402：第三方背景音乐模块（音乐）
-        // 501：逻辑模块（场景） 502：全局逻辑模块（场景）
+        // 1：调光回路（灯） 2：开关回路（继电器）（灯） 3：混合调光类 （灯） 4：混合开关类（继电器）（灯）
+        // 5：开合帘电机（窗帘）6：卷帘电机（窗帘） 7：窗帘模块 （窗帘）
+        // 8：HVAC 模块(空调)   9：通用空调面板(空调)
+        // 10：背景音乐模块（音乐） 11：第三方背景音乐模块（音乐）
+        // 12：逻辑模块（场景） 13：全局逻辑模块（场景）
         
-        //101，102，103，104 为灯 TYPE_LIGHT_DIMMER、TYPE_LIGHT_RELAY、TYPE_LIGHT_MIX_DIMMER、TYPE_LIGHT_MIX_RELAY
-        //201，202，203 为窗帘 TYPE_CURTAIN_GLYSTRO、TYPE_CURTAIN_ROLLER、TYPE_CURTAIN_MODULE
-        //301，302，303 为空调 TYPE_AC_HVAC、TYPE_AC_PANEL
-        //401，402 为音乐 TYPE_MUSIC_MODULE、TYPE_MUSIC_THIRD_PARTY_MODULE
-        //501，502 为场景 TYPE_LOGIC_MODULE、TYPE_GLOBAL_LOGIC_MODULE
+        //1、2、3、4 为灯 TYPE_LIGHT_DIMMER、TYPE_LIGHT_RELAY、TYPE_LIGHT_MIX_DIMMER、TYPE_LIGHT_MIX_RELAY
+        //5、6、7 为窗帘 TYPE_CURTAIN_GLYSTRO、TYPE_CURTAIN_ROLLER、TYPE_CURTAIN_MODULE
+        //8、9 为空调 TYPE_AC_HVAC、TYPE_AC_PANEL
+        //10、11 为音乐 TYPE_MUSIC_MODULE、TYPE_MUSIC_THIRD_PARTY_MODULE
+        //12、13 为场景 TYPE_LOGIC_MODULE、TYPE_GLOBAL_LOGIC_MODULE
         switch info!.deviceType! {
         case HDLApConfig.TYPE_LIGHT_DIMMER
         ,HDLApConfig.TYPE_LIGHT_RELAY
@@ -135,13 +135,10 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
     
     private func registerForHDL(){
         //        Demo为了演示直接拿此参数，在一个界面注册一种设备Delegate。若在同一界面需要控制多种设备则可以如下连续注册
-        //  HDLCommand.shareInstance.registerDelegate(delegate: self,type: HDLApConfig.TYPE_LIGHT)
-        
-        //  HDLCommand.shareInstance.registerDelegate(delegate: self,type: HDLApConfig.TYPE_CURTAIN)
-        
-        //  HDLCommand.shareInstance.registerDelegate(delegate: self,type: HDLApConfig.TYPE_AC)
-        
-        //  HDLCommand.shareInstance.registerDelegate(delegate: self,type: HDLApConfig.TYPE_LOGIC)
+        //        HDLCommand.shareInstance.registerDelegate(type: HDLApConfig.TYPE_LIGHT, delegate: self)
+        //        HDLCommand.shareInstance.registerDelegate(type: HDLApConfig.TYPE_CURTAIN, delegate: self)
+        //        HDLCommand.shareInstance.registerDelegate(type: HDLApConfig.TYPE_AC, delegate: self)
+        //        HDLCommand.shareInstance.registerDelegate(type: HDLApConfig.TYPE_LOGIC, delegate: self)
         
         HDLCommand.shareInstance.registerDelegate(delegate: self, type: self.info!.bigType!)
         
@@ -206,13 +203,16 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
     ///
     /// - Parameter lightCtrlBackInfo: 灯光控制反馈Bean
     func getLightCtrlInfo(lightCtrlBackInfo: LightCtrlBackInfo) {
-        if(!lightCtrlBackInfo.isSuccessCtrl){
-            lightStateLabel.text = "控制超时，请重新控制"
-            return
-        }
+        
         if(lightCtrlBackInfo.appliancesInfo!.deviceSubnetID == info!.deviceSubnetID
             && lightCtrlBackInfo.appliancesInfo!.deviceDeviceID == info!.deviceDeviceID
             && lightCtrlBackInfo.appliancesInfo!.channelNum == info!.channelNum){
+            
+            if(!lightCtrlBackInfo.isSuccessCtrl){
+                lightStateLabel.text = "控制超时，请重新控制"
+                return
+            }
+            
             lightState = lightCtrlBackInfo.brightness!
             lightStateLabel.text = "当前亮度:\(lightState)"
             //将亮度重置为0或100，仅作为测试演示。连续点击可实现开灯、关灯
@@ -231,13 +231,16 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
     ///
     /// - Parameter curtainCtrlBackInfo: 窗帘控制反馈Bean
     func getCurtainCtrlInfo(curtainCtrlBackInfo: CurtainCtrlBackInfo) {
-        if(!curtainCtrlBackInfo.isSuccessCtrl){
-            curtainStateLabel.text = "窗帘控制超时，请重新控制"
-            return
-        }
+        
         if(curtainCtrlBackInfo.appliancesInfo!.deviceSubnetID == info!.deviceSubnetID
             && curtainCtrlBackInfo.appliancesInfo!.deviceDeviceID == info!.deviceDeviceID
             && curtainCtrlBackInfo.appliancesInfo!.channelNum == info!.channelNum){
+            
+            if(!curtainCtrlBackInfo.isSuccessCtrl){
+                curtainStateLabel.text = "窗帘控制超时，请重新控制"
+                return
+            }
+            
             let curState:Int = curtainCtrlBackInfo.state!
             if(curtainCtrlBackInfo.appliancesInfo!.deviceType == HDLApConfig.TYPE_CURTAIN_MODULE){
                 //判断为窗帘模块，只返回以下3个状态
@@ -264,13 +267,15 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
     ///
     /// - Parameter airCtrlBackInfo: 空调控制反馈Bean
     func getAirCtrlInfo(airCtrlBackInfo: AirCtrlBackInfo) {
-        if(!airCtrlBackInfo.isSuccessCtrl){
-            airStateLabel.text = "空调控制超时，请重新控制"
-            return
-        }
+        
         if(airCtrlBackInfo.appliancesInfo!.deviceSubnetID == info!.deviceSubnetID
             && airCtrlBackInfo.appliancesInfo!.deviceDeviceID == info!.deviceDeviceID
             && airCtrlBackInfo.appliancesInfo!.channelNum == info!.channelNum){
+            
+            if(!airCtrlBackInfo.isSuccessCtrl){
+                airStateLabel.text = "空调控制超时，请重新控制"
+                return
+            }
             
             var curState:[Int] = airCtrlBackInfo.arrCurState!
             
@@ -337,20 +342,23 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
     ///
     /// - Parameter devicesStateBackInfo: 获取设备状态Bean
     func getDevicesState(devicesStateBackInfo: DevicesStateBackInfo) {
-        if(!devicesStateBackInfo.isSuccess){
-            print("获取设备状态超时，请重新再试")
-            return
-        }
+        
         let appliancesInfo = devicesStateBackInfo.appliancesInfo!
         if(appliancesInfo.deviceSubnetID == self.info!.deviceSubnetID
             && appliancesInfo.deviceDeviceID == self.info!.deviceDeviceID
             ){
+            
             switch (appliancesInfo.deviceType!) {
             case HDLApConfig.TYPE_LIGHT_DIMMER
             ,HDLApConfig.TYPE_LIGHT_RELAY
             ,HDLApConfig.TYPE_LIGHT_MIX_DIMMER
             ,HDLApConfig.TYPE_LIGHT_MIX_RELAY:
                 if(appliancesInfo.channelNum == self.info!.channelNum){
+                    if(!devicesStateBackInfo.isSuccess){
+                        print("获取设备状态超时，请重新再试")
+                        return
+                    }
+                    
                     let curState:Int = appliancesInfo.curState! as! Int
                     lightStateLabel.text = "当前亮度:\(curState)"
                     if(curState == 100){
@@ -362,6 +370,11 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
             case HDLApConfig.TYPE_CURTAIN_GLYSTRO
             ,HDLApConfig.TYPE_CURTAIN_ROLLER
             ,HDLApConfig.TYPE_CURTAIN_MODULE:
+                
+                if(!devicesStateBackInfo.isSuccess){
+                    print("获取设备状态超时，请重新再试")
+                    return
+                }
                 let curState:Int = appliancesInfo.curState! as! Int
                 if((appliancesInfo.deviceType!) == HDLApConfig.TYPE_CURTAIN_MODULE){//判断是否为窗帘模块,否则为开合帘或卷帘电机
                     switch (curState){
@@ -379,6 +392,11 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
                 }
             case HDLApConfig.TYPE_AC_HVAC,HDLApConfig.TYPE_AC_PANEL:
                 if(appliancesInfo.channelNum == self.info!.channelNum){
+                    if(!devicesStateBackInfo.isSuccess){
+                        print("获取设备状态超时，请重新再试")
+                        return
+                    }
+                    
                     let curState:[Int] = appliancesInfo.arrCurState!
                     
                     switch curState[0] {
@@ -456,20 +474,20 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
                 }
             default:
                 print("未知设备类型")
-                print("未知设备类型")
             }
         }
     }
     
     func getSceneCtrlInfo(sceneCtrlBackInfo: SceneCtrlBackInfo) {
-        if(!sceneCtrlBackInfo.isSuccessCtrl){
-            sceneStateLabel.text = "场景控制超时，请重新控制"
-            return
-        }
+        
         if(sceneCtrlBackInfo.appliancesInfo?.deviceSubnetID == info!.deviceSubnetID
             && sceneCtrlBackInfo.appliancesInfo?.deviceDeviceID == info!.deviceDeviceID
             && sceneCtrlBackInfo.areaNum == info!.logicMode!.areaNum
             && sceneCtrlBackInfo.areaSceneNum == info!.logicMode!.areaSceneNum){
+            if(!sceneCtrlBackInfo.isSuccessCtrl){
+                sceneStateLabel.text = "场景控制超时，请重新控制"
+                return
+            }
             sceneStateLabel.text = "\(info!.remarks) 场景控制成功"
         }
     }
@@ -478,8 +496,5 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    
-    
     
 }
