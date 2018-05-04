@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		653260A8209308A000BCA1F6 /* ApplianceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653260A7209308A000BCA1F6 /* ApplianceVC.swift */; };
 		653260AA209308C400BCA1F6 /* CtrlVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653260A9209308C400BCA1F6 /* CtrlVC.swift */; };
+		656C7E64209C296900C8D940 /* HDLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 656C7E63209C296800C8D940 /* HDLSDK.framework */; };
+		656C7E65209C297200C8D940 /* HDLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 656C7E63209C296800C8D940 /* HDLSDK.framework */; };
+		656C7E66209C297200C8D940 /* HDLSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 656C7E63209C296800C8D940 /* HDLSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		657C90762092FC6700454F1C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657C90752092FC6700454F1C /* AppDelegate.swift */; };
 		657C90782092FC6700454F1C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657C90772092FC6700454F1C /* ViewController.swift */; };
 		657C907B2092FC6700454F1C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 657C90792092FC6700454F1C /* Main.storyboard */; };
@@ -42,6 +45,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				656C7E66209C297200C8D940 /* HDLSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -51,6 +55,7 @@
 /* Begin PBXFileReference section */
 		653260A7209308A000BCA1F6 /* ApplianceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplianceVC.swift; sourceTree = "<group>"; };
 		653260A9209308C400BCA1F6 /* CtrlVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CtrlVC.swift; sourceTree = "<group>"; };
+		656C7E63209C296800C8D940 /* HDLSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HDLSDK.framework; sourceTree = "<group>"; };
 		657C90722092FC6700454F1C /* iOS HDL SDK Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iOS HDL SDK Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		657C90752092FC6700454F1C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		657C90772092FC6700454F1C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -71,6 +76,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				656C7E65209C297200C8D940 /* HDLSDK.framework in Frameworks */,
+				656C7E64209C296900C8D940 /* HDLSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,6 +101,7 @@
 		657C90692092FC6700454F1C = {
 			isa = PBXGroup;
 			children = (
+				656C7E63209C296800C8D940 /* HDLSDK.framework */,
 				657C90742092FC6700454F1C /* iOS HDL SDK Demo */,
 				657C90892092FC6800454F1C /* iOS HDL SDK DemoTests */,
 				657C90942092FC6900454F1C /* iOS HDL SDK DemoUITests */,

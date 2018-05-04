@@ -118,7 +118,7 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
             }
             devicesRemark.append(remark)
             
-            print("收到设备信息 子网号：\(value.sourceSubnetID!) 设备号：\(value.sourceDeviceID!) 备注：\(remark)")
+            print("收到设备信息 子网号：\(value.sourceSubnetID) 设备号：\(value.sourceDeviceID) 备注：\(remark)")
             
         }
         self.tableView?.reloadData()
@@ -153,7 +153,7 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
         //        alertController.addAction(okAction)
         //        self.present(alertController, animated: true, completion: nil)
         
-        let appliancesInfo:[AppliancesInfo] = self.devicesData[indexPath.row].appliancesInfoList!
+        let appliancesInfo:[AppliancesInfo] = self.devicesData[indexPath.row].appliancesInfoList
         
         self.performSegue(withIdentifier: "ShowApplianceView", sender: appliancesInfo)
     }

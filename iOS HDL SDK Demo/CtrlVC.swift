@@ -54,7 +54,7 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
         //8、9 为空调 TYPE_AC_HVAC、TYPE_AC_PANEL
         //10、11 为音乐 TYPE_MUSIC_MODULE、TYPE_MUSIC_THIRD_PARTY_MODULE
         //12、13 为场景 TYPE_LOGIC_MODULE、TYPE_GLOBAL_LOGIC_MODULE
-        switch info!.deviceType! {
+        switch info!.deviceType {
         case HDLApConfig.TYPE_LIGHT_DIMMER
         ,HDLApConfig.TYPE_LIGHT_RELAY
         ,HDLApConfig.TYPE_LIGHT_MIX_DIMMER
@@ -96,7 +96,7 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
             curtainStateLabel.text = "当前状态"
             self.view.addSubview(curtainStateLabel)
             
-            if((info!.deviceType!) != HDLApConfig.TYPE_CURTAIN_MODULE){//如果不是窗帘模块，则卷帘、开合帘拥有百分比控制方法
+            if((info!.deviceType) != HDLApConfig.TYPE_CURTAIN_MODULE){//如果不是窗帘模块，则卷帘、开合帘拥有百分比控制方法
                 curtainPercentBtn.frame = CGRect(x:0, y:statusBarHeight + 60 + 80 + 80 + 80, width:200, height:80)
                 curtainPercentBtn.setTitle("窗帘百分比控制", for:.normal)
                 curtainPercentBtn.titleLabel?.font = UIFont.systemFont(ofSize: 20)
@@ -140,7 +140,7 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
         //        HDLCommand.shareInstance.registerDelegate(type: HDLApConfig.TYPE_AC, delegate: self)
         //        HDLCommand.shareInstance.registerDelegate(type: HDLApConfig.TYPE_LOGIC, delegate: self)
         
-        HDLCommand.shareInstance.registerDelegate(delegate: self, type: self.info!.bigType!)
+        HDLCommand.shareInstance.registerDelegate(delegate: self, type: self.info!.bigType)
         
     }
     
@@ -213,7 +213,7 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
                 return
             }
             
-            lightState = lightCtrlBackInfo.brightness!
+            lightState = lightCtrlBackInfo.brightness
             lightStateLabel.text = "当前亮度:\(lightState)"
             //将亮度重置为0或100，仅作为测试演示。连续点击可实现开灯、关灯
             if(lightState == 100){
@@ -241,7 +241,7 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
                 return
             }
             
-            let curState:Int = curtainCtrlBackInfo.state!
+            let curState:Int = curtainCtrlBackInfo.state
             if(curtainCtrlBackInfo.appliancesInfo!.deviceType == HDLApConfig.TYPE_CURTAIN_MODULE){
                 //判断为窗帘模块，只返回以下3个状态
                 switch curState {
@@ -277,7 +277,7 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
                 return
             }
             
-            var curState:[Int] = airCtrlBackInfo.arrCurState!
+            var curState:[Int] = airCtrlBackInfo.arrCurState
             
             switch curState[0] {
             case AirCtrlParser.shareInstance.airSwich:
@@ -348,7 +348,7 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
             && appliancesInfo.deviceDeviceID == self.info!.deviceDeviceID
             ){
             
-            switch (appliancesInfo.deviceType!) {
+            switch (appliancesInfo.deviceType) {
             case HDLApConfig.TYPE_LIGHT_DIMMER
             ,HDLApConfig.TYPE_LIGHT_RELAY
             ,HDLApConfig.TYPE_LIGHT_MIX_DIMMER
@@ -359,7 +359,7 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
                         return
                     }
                     
-                    let curState:Int = appliancesInfo.curState! as! Int
+                    let curState:Int = appliancesInfo.curState as! Int
                     lightStateLabel.text = "当前亮度:\(curState)"
                     if(curState == 100){
                         lightState = 0
@@ -375,8 +375,8 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
                     print("获取设备状态超时，请重新再试")
                     return
                 }
-                let curState:Int = appliancesInfo.curState! as! Int
-                if((appliancesInfo.deviceType!) == HDLApConfig.TYPE_CURTAIN_MODULE){//判断是否为窗帘模块,否则为开合帘或卷帘电机
+                let curState:Int = appliancesInfo.curState as! Int
+                if((appliancesInfo.deviceType) == HDLApConfig.TYPE_CURTAIN_MODULE){//判断是否为窗帘模块,否则为开合帘或卷帘电机
                     switch (curState){
                     case CurtainCtrlParser.shareInstance.curtainClose:
                         curtainStateLabel.text = "窗帘关"
@@ -397,7 +397,7 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
                         return
                     }
                     
-                    let curState:[Int] = appliancesInfo.arrCurState!
+                    let curState:[Int] = appliancesInfo.arrCurState
                     
                     switch curState[0] {
                     case AirCtrlParser.shareInstance.airSwich:
