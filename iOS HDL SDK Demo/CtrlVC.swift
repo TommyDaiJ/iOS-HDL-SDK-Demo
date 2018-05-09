@@ -479,7 +479,6 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
     }
     
     func getSceneCtrlInfo(sceneCtrlBackInfo: SceneCtrlBackInfo) {
-        
         if(sceneCtrlBackInfo.appliancesInfo?.deviceSubnetID == info!.deviceSubnetID
             && sceneCtrlBackInfo.appliancesInfo?.deviceDeviceID == info!.deviceDeviceID
             && sceneCtrlBackInfo.areaNum == info!.logicMode!.areaNum
