@@ -84,6 +84,7 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
         devicesRemark.removeAll()
         if(!(searchDevicesBackInfo.isSuccess)){
             searchLabel.text = "搜索超时，请重新再试"
+            self.tableView?.reloadData()
             return
         }
         handleSearchData(devicesData: searchDevicesBackInfo.devicesData!)
@@ -98,6 +99,7 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
         devicesRemark.removeAll()
         if(!(searchDevicesBackInfo.isSuccess)){
             searchLabel.text = "搜索超时，请重新再试"
+            self.tableView?.reloadData()
             return
         }
         handleSearchData(devicesData: searchDevicesBackInfo.devicesData!)
@@ -144,14 +146,6 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.tableView!.deselectRow(at: indexPath, animated: true)
-        
-        //        let itemString = self.devicesRemark[indexPath.row]
-        //
-        //        let alertController = UIAlertController(title: "提示!",
-        //                                                message: "你选中了【\(itemString)】", preferredStyle: .alert)
-        //        let okAction = UIAlertAction(title: "确定", style: .default,handler: nil)
-        //        alertController.addAction(okAction)
-        //        self.present(alertController, animated: true, completion: nil)
         
         let appliancesInfo:[AppliancesInfo] = self.devicesData[indexPath.row].appliancesInfoList
         
