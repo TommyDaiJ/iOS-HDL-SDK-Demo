@@ -9,8 +9,6 @@
 import UIKit
 import HDLSDK
 
-
-/// 演示控制某一回路
 class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDelegate,DeviceStateDelegate,SceneCtrlDelegate {
     
     var info:AppliancesInfo?
@@ -38,7 +36,7 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
         
         initView()
         registerForHDL()
-        getStateForHDL()
+        //        getStateForHDL()
     }
     
     private func initView(){
@@ -66,8 +64,8 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
             self.view.addSubview(lightBtn)
             lightBtn.addTarget(self, action:#selector(lightCtrl), for:.touchUpInside)
             
-            lightStateLabel.frame =  CGRect(x:50, y:statusBarHeight + 60 + 80, width:200, height:80)
-            lightStateLabel.text = "当前状态"
+            lightStateLabel.frame =  CGRect(x:50, y:statusBarHeight + 60 + 80, width:250, height:80)
+            lightStateLabel.text = "当前灯光亮度：\(info!.curState)"
             self.view.addSubview(lightStateLabel)
             
         case HDLApConfig.TYPE_CURTAIN_GLYSTRO
@@ -92,16 +90,32 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
             self.view.addSubview(curtainCloseBtn)
             curtainCloseBtn.addTarget(self, action:#selector(curtainCloseCtrl), for:.touchUpInside)
             
-            curtainStateLabel.frame =  CGRect(x:0, y:statusBarHeight + 60 + 80 + 80 + 80 + 80, width:200, height:80)
-            curtainStateLabel.text = "当前状态"
+            curtainStateLabel.frame =  CGRect(x:0, y:statusBarHeight + 60 + 80 + 80 + 80 + 80, width:280, height:80)
+            
+            
             self.view.addSubview(curtainStateLabel)
             
             if((info!.deviceType) != HDLApConfig.TYPE_CURTAIN_MODULE){//如果不是窗帘模块，则卷帘、开合帘拥有百分比控制方法
+                curtainStateLabel.text = "当前窗帘状态：\(info!.curState)"
                 curtainPercentBtn.frame = CGRect(x:0, y:statusBarHeight + 60 + 80 + 80 + 80, width:200, height:80)
                 curtainPercentBtn.setTitle("窗帘百分比控制", for:.normal)
                 curtainPercentBtn.titleLabel?.font = UIFont.systemFont(ofSize: 20)
                 self.view.addSubview(curtainPercentBtn)
                 curtainPercentBtn.addTarget(self, action:#selector(curtainPercentCtrl), for:.touchUpInside)
+            }else{
+                var curtainState = ""
+                switch info!.curState {
+                case 0:
+                    curtainState += "窗帘模块停止状态"
+                case 1:
+                    curtainState += "窗帘模块开状态"
+                case 2:
+                    curtainState += "窗帘模块关状态"
+                default:
+                    break
+                }
+                curtainStateLabel.text = "当前窗帘状态：\(curtainState)"
+                print("当前窗帘状态：\(curtainState)")
             }
             
             
@@ -113,9 +127,101 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
             self.view.addSubview(sceneCtrlBtn)
             sceneCtrlBtn.addTarget(self, action:#selector(airCtrl), for:.touchUpInside)
             
-            airStateLabel.frame =  CGRect(x:0, y:statusBarHeight + 60 + 80 , width:200, height:80)
-            airStateLabel.text = "当前状态"
+            airStateLabel.frame =  CGRect(x:0, y:statusBarHeight + 60 + 80 , width:350, height:180)
+            airStateLabel.adjustsFontSizeToFitWidth = true
+            
+            //info!.arrCurState数组释义
+            //Index0:开关 位
+            //Index1：模式 位
+            //Index2：温度 位
+            //Index3：风速 位
+            
+            //Value0: 0关、1开
+            //Value1：0制冷，1制热，2通风，3自动，4抽湿
+            //Value2：通风无温度 当前模式下的温度
+            //Value3：抽湿无风速 0自动，1高，2中，3低
+            var acState = ""
+            for index in 0...(info!.arrCurState.count - 1) {
+                if(index == 0 && info!.arrCurState[index] == 0){
+                    acState += "空调已关闭"
+                    //如果空调关闭状态，则无需再遍历
+                    break
+                }
+                if(index == 0 && info!.arrCurState[index] == 1){
+                    acState += "空调正在运行"
+                }
+                switch index {
+                    
+                case 1:
+                    switch info!.arrCurState[index]{
+                    case 0:
+                        acState += " 空调模式:制冷"
+                    case 1:
+                        acState += " 空调模式:制热"
+                    case 2:
+                        acState += " 空调模式:通风"
+                    case 3:
+                        acState += " 空调模式:自动"
+                    case 4:
+                        acState += " 空调模式:抽湿"
+                    default:
+                        acState += " 未知空调模式"
+                    }
+                case 2:
+                    switch info!.arrCurState[1]{
+                    case 0:
+                        acState += " 制冷温度：\(info!.arrCurState[index])"
+                    case 1:
+                        acState += " 制热温度：\(info!.arrCurState[index])"
+                    case 2:
+                        acState += " 通风模式下，无温度显示"
+                    case 3:
+                        acState += " 自动温度：\(info!.arrCurState[index])"
+                    case 4:
+                        acState += " 抽湿温度：\(info!.arrCurState[index])"
+                    default:
+                        acState += " 未知温度"
+                    }
+                case 3:
+                    var curSpeed = ""
+                    switch info!.arrCurState[index] {
+                    case 0:
+                        curSpeed = " 风速自动"
+                    case 1:
+                        curSpeed = " 风速高"
+                    case 2:
+                        curSpeed = " 风速中"
+                    case 3:
+                        curSpeed = " 风速低"
+                    default:
+                        curSpeed = " 未知风速"
+                    }
+                    switch info!.arrCurState[1]{
+                    case 0:
+                        acState += curSpeed
+                    case 1:
+                        acState += curSpeed
+                    case 2:
+                        acState += curSpeed
+                    case 3:
+                        acState += curSpeed
+                    case 4:
+                        acState += " 抽湿无风速"
+                    default:
+                        acState += " 未知空调模式"
+                        break
+                    }
+                    
+                default:
+                    break
+                }
+            }
+            
+            airStateLabel.text = acState
+            print(acState)
             self.view.addSubview(airStateLabel)
+            
+            
         case HDLApConfig.TYPE_LOGIC_MODULE
         ,HDLApConfig.TYPE_GLOBAL_LOGIC_MODULE:
             sceneCtrlBtn.frame = CGRect(x:0, y:statusBarHeight + 60, width:120, height:80)
@@ -144,8 +250,11 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
         
     }
     
+    
+    
+    //获取某个设备回路的状态。注意：场景无状态接口，若为场景调用此方法，无任何作用
+    //此方法不适合将所有设备遍历获取状态，只适合获取单个回路。
     private func getStateForHDL(){
-        //        获取某个设备回路的状态。若要获取所有回路状态则需要自行遍历。注意：场景无状态接口，若为场景调用此方法，无任何作用
         HDLCommand.shareInstance.getDeviceState(delegate: self, appliancesInfo: self.info!)
     }
     
@@ -168,25 +277,26 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
     
     @objc func curtainPercentCtrl(){
         //state范围：0 - 100
-        HDLCommand.shareInstance.curtainCtrl(delegate: self, appliancesInfo: self.info!, state: 50)
+        HDLCommand.shareInstance.curtainCtrl(delegate: self, appliancesInfo: self.info!, state: 40)
         
     }
     
     @objc func airCtrl(){
         
         
+        
         //以下为具体控制空调的api。注意：当空调模式为抽湿时，不能调节风速。当空调模式为通风时，不能调节温度。
         HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airSwich, state: AirCtrlParser.shareInstance.airOn) //空调开
-        //        HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airSwich, state: AirCtrlParser.shareInstance.airOff)//空调关
-        //        HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airSpeed, state: AirCtrlParser.shareInstance.airSpeedAuto)//风速自动
+        //                HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airSwich, state: AirCtrlParser.shareInstance.airOff)//空调关
+        //                HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airSpeed, state: AirCtrlParser.shareInstance.airSpeedAuto)//风速自动
         //        HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airSpeed, state: AirCtrlParser.shareInstance.airSpeedHigh)//风速高风
-        //        HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airSpeed, state: AirCtrlParser.shareInstance.airSpeedMid)//风速中风
-        //        HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airSpeed, state: AirCtrlParser.shareInstance.airSpeedLow)//风速低风
-        //        HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airMode, state: AirCtrlParser.shareInstance.airModeRefTem)//空调模式制冷
-        //        HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airMode, state: AirCtrlParser.shareInstance.airModeHeatTem)//空调模式制热
-        //        HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airMode, state: AirCtrlParser.shareInstance.airModeVen)//空调模式通风
-        //        HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airMode, state: AirCtrlParser.shareInstance.airModeAuto)//空调模式自动
-        //        HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airMode, state: AirCtrlParser.shareInstance.airModeDehum)//空调模式抽湿
+        //                HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airSpeed, state: AirCtrlParser.shareInstance.airSpeedMid)//风速中风
+        //                HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airSpeed, state: AirCtrlParser.shareInstance.airSpeedLow)//风速低风
+        //                HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airMode, state: AirCtrlParser.shareInstance.airModeRefTem)//空调模式制冷
+        //                HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airMode, state: AirCtrlParser.shareInstance.airModeHeatTem)//空调模式制热
+        //                HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airMode, state: AirCtrlParser.shareInstance.airModeVen)//空调模式通风
+        //                HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airMode, state: AirCtrlParser.shareInstance.airModeAuto)//空调模式自动
+        //                HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.airMode, state: AirCtrlParser.shareInstance.airModeDehum)//空调模式抽湿
         //        HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.heatTem, state: 28)//制热温度 范围0-30
         //        HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.autoTem, state: 20)//自动温度 范围0-30
         //        HDLCommand.shareInstance.airCtrl(delegate: self, appliancesInfo: self.info!, ctrlType: AirCtrlParser.shareInstance.refTem, state: 16)//制冷温度 范围0-30
@@ -278,7 +388,6 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
             }
             
             var curState:[Int] = airCtrlBackInfo.arrCurState
-            
             switch curState[0] {
             case AirCtrlParser.shareInstance.airSwich:
                 switch curState[1] {
@@ -330,7 +439,7 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
             case AirCtrlParser.shareInstance.downTem:
                 airStateLabel.text = "空调调温，下降温度:\(curState[1])"
             default:
-                print("未知类型")
+                print("空调控制：未知类型")
             }
             
         }
@@ -355,11 +464,11 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
             ,HDLApConfig.TYPE_LIGHT_MIX_RELAY:
                 if(appliancesInfo.channelNum == self.info!.channelNum){
                     if(!devicesStateBackInfo.isSuccess){
-                        print("获取设备状态超时，请重新再试")
+                        print("当前灯光回路号：\(appliancesInfo.channelNum) 状态超时，请重新再试")
                         return
                     }
                     
-                    let curState:Int = appliancesInfo.curState as! Int
+                    let curState:Int = appliancesInfo.curState
                     lightStateLabel.text = "当前亮度:\(curState)"
                     if(curState == 100){
                         lightState = 0
@@ -370,26 +479,29 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
             case HDLApConfig.TYPE_CURTAIN_GLYSTRO
             ,HDLApConfig.TYPE_CURTAIN_ROLLER
             ,HDLApConfig.TYPE_CURTAIN_MODULE:
-                
-                if(!devicesStateBackInfo.isSuccess){
-                    print("获取设备状态超时，请重新再试")
-                    return
-                }
-                let curState:Int = appliancesInfo.curState as! Int
-                if((appliancesInfo.deviceType) == HDLApConfig.TYPE_CURTAIN_MODULE){//判断是否为窗帘模块,否则为开合帘或卷帘电机
-                    switch (curState){
-                    case CurtainCtrlParser.shareInstance.curtainClose:
-                        curtainStateLabel.text = "窗帘关"
-                    case CurtainCtrlParser.shareInstance.curtainOpen:
-                        curtainStateLabel.text = "窗帘开"
-                    case CurtainCtrlParser.shareInstance.curtainPause:
-                        curtainStateLabel.text = "窗帘暂停"
-                    default:
-                        curtainStateLabel.text = "未知状态"
+                if(appliancesInfo.channelNum == self.info!.channelNum){
+                    if(!devicesStateBackInfo.isSuccess){
+                        print("当前窗帘回路号：\(appliancesInfo.channelNum) 状态超时，请重新再试")
+                        return
                     }
-                }else{
-                    curtainStateLabel.text = "当前百分比：\(curState)"
+                    
+                    let curState:Int = appliancesInfo.curState
+                    if((appliancesInfo.deviceType) == HDLApConfig.TYPE_CURTAIN_MODULE){//判断是否为窗帘模块,否则为开合帘或卷帘电机
+                        switch (curState){
+                        case CurtainCtrlParser.shareInstance.curtainClose:
+                            curtainStateLabel.text = "窗帘关"
+                        case CurtainCtrlParser.shareInstance.curtainOpen:
+                            curtainStateLabel.text = "窗帘开"
+                        case CurtainCtrlParser.shareInstance.curtainPause:
+                            curtainStateLabel.text = "窗帘暂停"
+                        default:
+                            curtainStateLabel.text = "未知状态"
+                        }
+                    }else{
+                        curtainStateLabel.text = "当前百分比：\(curState)"
+                    }
                 }
+                
             case HDLApConfig.TYPE_AC_HVAC,HDLApConfig.TYPE_AC_PANEL:
                 if(appliancesInfo.channelNum == self.info!.channelNum){
                     if(!devicesStateBackInfo.isSuccess){
@@ -468,7 +580,6 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
                         print("空调调温，下降温度:\(curState[1])")
                     default:
                         print("未知类型")
-                        print("未知类型")
                     }
                     
                 }
@@ -497,4 +608,8 @@ class CtrlVC: UIViewController,LightCtrlDelegate,CurtainCtrlDelegate,ACCtrlDeleg
         // Dispose of any resources that can be recreated.
     }
     
+    
+    
+    
 }
+
