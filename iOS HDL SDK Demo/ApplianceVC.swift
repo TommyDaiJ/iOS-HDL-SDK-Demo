@@ -140,6 +140,11 @@ class ApplianceVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
         self.tableView!.dataSource = self
         self.tableView!.register(UITableViewCell.self,forCellReuseIdentifier: "SwiftCell")
         self.view.addSubview(self.tableView!)
+        
+        
+//        HDLCommand.shareInstance.listlLightsCtrl(delegate: <#T##Any#>, appliancesInfos: <#T##[AppliancesInfo]#>, states: <#T##[Int]#>)
+        
+//        HDLCommand.shareInstance.listCurtainCtrl(delegate: <#T##Any#>, appliancesInfo: <#T##[AppliancesInfo]#>, states: <#T##[Int]#>)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
